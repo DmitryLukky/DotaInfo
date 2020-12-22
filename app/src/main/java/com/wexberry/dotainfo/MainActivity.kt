@@ -1,14 +1,18 @@
 package com.wexberry.dotainfo
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.wexberry.dotainfo.adaptersRecyclerView.DotaAdapter
+import com.wexberry.dotainfo.AdaptersRecyclerView.DotaAdapter
 import com.wexberry.dotainfo.network.DotaApiClient
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
@@ -43,8 +47,9 @@ class MainActivity : AppCompatActivity() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { it ->
-                    val heroes = it.heroes
-                    Log.d("TAG", heroes.toString())
+                    val heroes = it
+                    Log.d(TAG, heroes.toString())
+
                     // Передаем результат в adapter и отображаем элементы
                     recyclerView.adapter = DotaAdapter(heroes, R.layout.list_item_heroes)
                 },

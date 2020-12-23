@@ -1,6 +1,5 @@
 package com.wexberry.dotainfo
 
-import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -10,20 +9,17 @@ import com.wexberry.dotainfo.AdaptersRecyclerView.DotaAdapter
 import com.wexberry.dotainfo.network.DotaApiClient
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var recyclerView: RecyclerView
+    //lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        initFields()
-        initFunc()
+        //initFields()
+        //initFunc()
     }
 
     private fun initFields() {
@@ -35,8 +31,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createRecyclerView() {
-        recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        //recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
+        //recyclerView.layoutManager = LinearLayoutManager(this)
     }
 
     fun getAllHeroes() {
@@ -51,7 +47,7 @@ class MainActivity : AppCompatActivity() {
                     Log.d(TAG, heroes.toString())
 
                     // Передаем результат в adapter и отображаем элементы
-                    recyclerView.adapter = DotaAdapter(heroes, R.layout.list_item_heroes)
+                    //recyclerView.adapter = DotaAdapter(heroes, R.layout.list_item_heroes)
                 },
                 { error ->
                     // Логируем ошибку

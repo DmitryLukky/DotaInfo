@@ -30,10 +30,10 @@ abstract class HeroesRoomDatabase : RoomDatabase() {
             heroesDao.deleteAll()
 
             // Добавить слова
-            var heroes = HeroesRoom(999, "TestName", "TestLocalizedName", "TestAttr", "TestAttackType", listOf("TestRoles1", "TestRoles2", "TestRoles3"))
+            var heroes = HeroesRoom(999, "TestName", "TestLocalizedName", "TestAttr", "TestAttackType", "TestRoles1")
             heroesDao.insert(heroes)
 
-            heroes = HeroesRoom(998, "TestName2", "TestLocalizedName2", "TestAttr2", "TestAttackType2", listOf("TestRoles11", "TestRoles22", "TestRoles33"))
+            heroes = HeroesRoom(998, "TestName2", "TestLocalizedName2", "TestAttr2", "TestAttackType2", "TestRoles2")
             heroesDao.insert(heroes)
         }
     }

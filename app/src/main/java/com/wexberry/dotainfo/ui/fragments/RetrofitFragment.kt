@@ -28,7 +28,6 @@ class RetrofitFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var mBinding: FragmentRetrofitBinding
-    private lateinit var heroesList: HeroesRoom
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -69,10 +68,8 @@ class RetrofitFragment : Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { it ->
-                    //heroesList = it
-
                     val heroes = it
-                    Log.d(TAG, heroesList.toString())
+                    Log.d(TAG, heroes.toString())
 
                     // Передаем результат в adapter и отображаем элементы
                     recyclerView.adapter = DotaAdapter(heroes, R.layout.list_item_heroes)

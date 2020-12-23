@@ -20,7 +20,7 @@ class RoomFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = FragmentRoomBinding.inflate(inflater, container, false).also {
+    ): View = FragmentRoomBinding.inflate(inflater, container, false).also {
 
         mBinding = it
 
@@ -38,12 +38,17 @@ class RoomFragment : Fragment() {
     }
 
     private fun initFunc() {
+        getRoom()
         btnClick()
     }
 
     private fun createRecyclerView() {
         recyclerView = mBinding.roomRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(context)
+    }
+
+    private fun getRoom(){
+
     }
 
     private fun btnClick() {

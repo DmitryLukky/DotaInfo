@@ -1,21 +1,30 @@
 package com.wexberry.dotainfo.ui.fragments
 
+import android.app.Application
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.LiveData
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.wexberry.dotainfo.AdaptersRecyclerView.DotaAdapter
+import com.wexberry.dotainfo.AdaptersRecyclerView.RoomDotaAdapter
 import com.wexberry.dotainfo.R
 import com.wexberry.dotainfo.databinding.FragmentRoomBinding
+import com.wexberry.dotainfo.room.HeroesRoom
+import com.wexberry.dotainfo.room.HeroesViewModel
+import kotlin.coroutines.coroutineContext
 
 
 class RoomFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var mBinding: FragmentRoomBinding
+    private lateinit var viewModel: HeroesViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,11 +43,12 @@ class RoomFragment : Fragment() {
     }
 
     private fun initFields() {
+        viewModel = HeroesViewModel(Application())
         createRecyclerView()
     }
 
     private fun initFunc() {
-        getRoom()
+        getHeroesFromRoom()
         btnClick()
     }
 
@@ -47,8 +57,9 @@ class RoomFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
     }
 
-    private fun getRoom(){
-
+    private fun getHeroesFromRoom() {
+        var allHeroes: List<HeroesRoom> = viewModel.allHeroes.value!!
+        recyclerView.adapter = RoomDotaAdapter(allHeroes, R.layout.list_item_heroes)
     }
 
     private fun btnClick() {

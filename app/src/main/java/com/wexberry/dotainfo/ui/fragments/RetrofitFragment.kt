@@ -1,6 +1,8 @@
 package com.wexberry.dotainfo.ui.fragments
 
+import android.app.Application
 import android.os.Bundle
+import android.provider.SyncStateContract.Helpers.insert
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -16,18 +18,20 @@ import com.wexberry.dotainfo.R
 import com.wexberry.dotainfo.databinding.FragmentRetrofitBinding
 import com.wexberry.dotainfo.network.DotaApiClient
 import com.wexberry.dotainfo.network.dataModels.Heroes
-import com.wexberry.dotainfo.room.HeroesDao
-import com.wexberry.dotainfo.room.HeroesRepository
-import com.wexberry.dotainfo.room.HeroesRoom
-import com.wexberry.dotainfo.room.HeroesRoomDatabase
+import com.wexberry.dotainfo.room.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 class RetrofitFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var mBinding: FragmentRetrofitBinding
+    lateinit var listRoom: HeroesRoom
+    private lateinit var viewModel: HeroesViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,6 +50,7 @@ class RetrofitFragment : Fragment() {
     }
 
     private fun initFields() {
+        viewModel = HeroesViewModel(Application())
         createRecyclerView()
         //mBinding = FragmentRetrofitBinding.inflate(layoutInflater)
     }
@@ -71,6 +76,17 @@ class RetrofitFragment : Fragment() {
                     val heroes = it
                     Log.d(TAG, heroes.toString())
 
+                    it.forEach {
+                        listRoom = HeroesRoom(
+                            it.id,
+                            it.nameHero,
+                            it.localizedName,
+                            it.primaryAttr,
+                            it.attackType,
+                            it.roles.toString()
+                        )
+                    }
+                    Log.d(TAG, listRoom.toString())
                     // Передаем результат в adapter и отображаем элементы
                     recyclerView.adapter = DotaAdapter(heroes, R.layout.list_item_heroes)
                 },
@@ -87,9 +103,17 @@ class RetrofitFragment : Fragment() {
         }
 
         mBinding.btnSaveToRoom.setOnClickListener {
-//            var heroes: List<HeroesRoom> = heroesList
-//            HeroesRepository().insert(heroes)
+
+            GlobalScope.launch(Dispatchers.IO) {
+                saveToRoom(listRoom)
+            }
+
+            findNavController().navigate(R.id.roomFragment)
         }
+    }
+
+    private suspend fun saveToRoom(heroes: HeroesRoom) {
+        viewModel.insert(heroes)
     }
 
     companion object {

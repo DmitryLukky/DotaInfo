@@ -12,8 +12,8 @@ class HeroesViewModel(application: Application) : AndroidViewModel(application) 
     val allHeroes: LiveData<List<HeroesRoom>>
 
     init {
-        val wordsDao = HeroesRoomDatabase.getDatabase(application, viewModelScope).heroesDao()
-        repository = HeroesRepository(wordsDao)
+        val heroesDao = HeroesRoomDatabase.getDatabase(application, viewModelScope).heroesDao()
+        repository = HeroesRepository(heroesDao)
         allHeroes = repository.allHeroes
     }
 

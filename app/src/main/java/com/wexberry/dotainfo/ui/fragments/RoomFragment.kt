@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -43,7 +45,7 @@ class RoomFragment : Fragment() {
     }
 
     private fun initFields() {
-        viewModel = HeroesViewModel(Application())
+        viewModel = ViewModelProvider(this).get(HeroesViewModel::class.java)
         createRecyclerView()
     }
 
@@ -58,8 +60,11 @@ class RoomFragment : Fragment() {
     }
 
     private fun getHeroesFromRoom() {
-        var allHeroes: List<HeroesRoom> = viewModel.allHeroes.value!!
-        recyclerView.adapter = RoomDotaAdapter(allHeroes, R.layout.list_item_heroes)
+        var allHeroes: List<HeroesRoom>? = viewModel.allHeroes.value
+
+        if (allHeroes != null) {
+            recyclerView.adapter = RoomDotaAdapter(allHeroes, R.layout.list_item_heroes)
+        }
     }
 
     private fun btnClick() {

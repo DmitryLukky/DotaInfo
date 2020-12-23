@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -50,7 +51,7 @@ class RetrofitFragment : Fragment() {
     }
 
     private fun initFields() {
-        viewModel = HeroesViewModel(Application())
+        viewModel = ViewModelProvider(this).get(HeroesViewModel::class.java)
         createRecyclerView()
         //mBinding = FragmentRetrofitBinding.inflate(layoutInflater)
     }
@@ -104,15 +105,13 @@ class RetrofitFragment : Fragment() {
 
         mBinding.btnSaveToRoom.setOnClickListener {
 
-            GlobalScope.launch(Dispatchers.IO) {
-                saveToRoom(listRoom)
-            }
+            saveToRoom(listRoom)
 
             findNavController().navigate(R.id.roomFragment)
         }
     }
 
-    private suspend fun saveToRoom(heroes: HeroesRoom) {
+    private fun saveToRoom(heroes: HeroesRoom) {
         viewModel.insert(heroes)
     }
 

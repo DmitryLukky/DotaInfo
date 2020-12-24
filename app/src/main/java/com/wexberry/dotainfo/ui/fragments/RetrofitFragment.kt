@@ -21,6 +21,8 @@ import com.wexberry.dotainfo.network.DotaApiClient
 import com.wexberry.dotainfo.network.dataModels.Heroes
 import com.wexberry.dotainfo.room.*
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.disposables.Disposables
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -31,7 +33,6 @@ class RetrofitFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var mBinding: FragmentRetrofitBinding
-    lateinit var listRoom: HeroesRoom
     private lateinit var viewModel: HeroesViewModel
 
     override fun onCreateView(
@@ -69,6 +70,11 @@ class RetrofitFragment : Fragment() {
     fun getAllHeroes() {
         val apiClient = DotaApiClient.apiClient.getAllHeroes()
 
+        disposed.add {
+            // Кладём apiClient
+            // и в onDestroy нужно очистить
+        }
+
         apiClient
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -78,16 +84,12 @@ class RetrofitFragment : Fragment() {
                     Log.d(TAG, heroes.toString())
 
                     it.forEach {
-                        listRoom = HeroesRoom(
-                            it.id,
-                            it.nameHero,
-                            it.localizedName,
-                            it.primaryAttr,
-                            it.attackType,
-                            it.roles.toString()
-                        )
+                        val listRoom = HeroesRoom.heroesToRoom(it)
+
+                        viewModel.insert(listRoom)
+
+                        Log.d(TAG, listRoom.toString())
                     }
-                    Log.d(TAG, listRoom.toString())
                     // Передаем результат в adapter и отображаем элементы
                     recyclerView.adapter = DotaAdapter(heroes, R.layout.list_item_heroes)
                 },
@@ -116,6 +118,7 @@ class RetrofitFragment : Fragment() {
     }
 
     companion object {
+        val disposed: Disposables = Disposables()
         val TAG = "MainActivity"
     }
 }

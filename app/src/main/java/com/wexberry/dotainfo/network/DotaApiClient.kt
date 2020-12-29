@@ -19,6 +19,6 @@ object DotaApiClient {
         return@lazy retrofit.create(DotaApiInterface::class.java)
 
         // Для создание экземпляра Retrofit лучше всего использовать делегированное свойство by lazy,
-        // то есть отложенную инициализацию.
+        // то есть отложенную инициализацию (ленивая инициализация).
     }
 }

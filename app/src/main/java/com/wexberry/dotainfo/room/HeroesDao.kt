@@ -11,7 +11,7 @@ interface HeroesDao {
 
     // Вместо * можно запрашивать поля
     @Query("SELECT * from heroes_table ORDER BY localizedName ASC")
-    fun getAlphabetizedHeroes(nameFields: String): LiveData<List<HeroesRoom>>
+    fun getAlphabetizedHeroes(): LiveData<List<HeroesRoom>>
 
 //    @Query("SELECT * from heroes_table WHERE name=:nameFields ORDER BY localizedName ASC")
 //    fun getAlphabetizedHeroes(nameFields: String): LiveData<List<HeroesRoom>>

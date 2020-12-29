@@ -39,6 +39,11 @@ android {
     viewBinding {
         enabled = true
     }
+
+    kapt {
+        generateStubs = true
+        correctErrorTypes = true
+    }
 }
 
 dependencies {

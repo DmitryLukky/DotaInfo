@@ -16,4 +16,8 @@ class HeroesRepository(private val heroesDao: HeroesDao) {
     suspend fun insert(heroes: HeroesRoom) {
         heroesDao.insert(heroes)
     }
+
+    suspend fun deleteAll(){
+        heroesDao.deleteAll()
+    }
 }

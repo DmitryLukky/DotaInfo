@@ -19,12 +19,21 @@
 
     <Button
         android:id="@+id/btn_back"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:text="Назад"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/btn_delete_all"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Очистить Room"
+        app:layout_constraintBottom_toTopOf="@+id/btn_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

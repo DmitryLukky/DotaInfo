@@ -65,7 +65,6 @@ class RoomFragment : Fragment() {
         viewModel.allHeroesRoom.observe(viewLifecycleOwner, Observer { it ->
             if (it != null) {
                 recyclerView.adapter = RoomDotaAdapter(it, R.layout.list_item_heroes)
-                Log.d("TAG", it.toString())
             }
         })
     }
@@ -73,6 +72,10 @@ class RoomFragment : Fragment() {
     private fun btnClick() {
         mBinding.btnBack.setOnClickListener {
             findNavController().navigate(R.id.retrofitFragment)
+        }
+
+        mBinding.btnDeleteAll.setOnClickListener {
+            viewModel.deleteAllFromRoom()
         }
     }
 }

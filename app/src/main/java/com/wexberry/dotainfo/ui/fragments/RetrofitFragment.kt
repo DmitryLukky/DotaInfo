@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,8 +16,10 @@ import com.wexberry.dotainfo.AdaptersRecyclerView.DotaAdapter
 import com.wexberry.dotainfo.R
 import com.wexberry.dotainfo.databinding.FragmentRetrofitBinding
 import com.wexberry.dotainfo.network.DotaApiClient
+import com.wexberry.dotainfo.network.dataModels.Heroes
 import com.wexberry.dotainfo.room.*
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposables
 import io.reactivex.schedulers.Schedulers
 
 
@@ -48,7 +52,6 @@ class RetrofitFragment : Fragment() {
     }
 
     private fun initFunc() {
-        getAllHeroes()
         btnClick()
     }
 
@@ -57,38 +60,24 @@ class RetrofitFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
     }
 
+    private fun addContentToRecyclerView() {
+        viewModel.heroesRetrofit?.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                recyclerView.adapter = DotaAdapter(it, R.layout.list_item_heroes)
+            } else {
+                Toast.makeText(context, "Загрузка неудалась", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
 
-    fun getAllHeroes() {
-        val apiClient = DotaApiClient.apiClient.getAllHeroes()
-
-//        disposed.add {
-//            // Кладём apiClient
-//            // и в onDestroy нужно очистить
-//        }
-
-        apiClient
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { it ->
-                    val heroes = it
-                    Log.d(TAG, heroes.toString())
-
-                    it.forEach {
-                        val listRoom = HeroesRoom.heroesToRoom(it)
-
-                        viewModel.insert(listRoom)
-
-                        Log.d(TAG, listRoom.toString())
-                    }
-                    // Передаем результат в adapter и отображаем элементы
-                    recyclerView.adapter = DotaAdapter(heroes, R.layout.list_item_heroes)
-                },
-                { error ->
-                    // Логируем ошибку
-                    Log.d(TAG, error.toString())
-                }
-            ).isDisposed
+    private fun insertToRoom() {
+        viewModel.heroesToRoom?.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                viewModel.insert(it)
+            } else {
+                Toast.makeText(context, "Загрузите героев", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     private fun btnClick() {
@@ -97,7 +86,13 @@ class RetrofitFragment : Fragment() {
         }
 
         mBinding.btnSaveToRoom.setOnClickListener {
+            insertToRoom()
             findNavController().navigate(R.id.roomFragment)
+        }
+
+        mBinding.btnGetAllHeroes.setOnClickListener {
+            viewModel.getAllHeroes()
+            addContentToRecyclerView()
         }
     }
 
